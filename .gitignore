@@ -1,0 +1,12 @@
+#Wandb
+wandb/
+
+#data
+data/saved_embeddings
+
+data/cora
+data/Cora
+data/Citeseer
+data/citeseer
+data/Pubmed
+data/pubmed

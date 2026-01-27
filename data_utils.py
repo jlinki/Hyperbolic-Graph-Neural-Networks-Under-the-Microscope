@@ -277,7 +277,7 @@ class GraphDatasetLoader:
         self.synthetic_datasets = ['tree1111_g00_lp', 'tree1111_g005_lp', 'tree1111_g010_lp','tree1111_g015_lp', 'tree1111_g02_lp',
                                 'tree1111_g04_lp', 'tree1111_g06_lp', 'tree1111_g08_lp', 'tree1111_g10_lp',
                                 'tree100_2_2_2_nc', 'disease_lp', 'disease_nc',
-                                   'disease_m_lp', 'pdp_tree','pdp_grid', 'grid_28x28_nr', 'tree100_2_2_2_null_nc']
+                                'disease_m_lp', 'pdp_tree','pdp_grid', 'grid_28x28_nr', 'tree100_2_2_2_null_nc']
 
 
     def load(self):

@@ -1,4 +1,5 @@
 """Utility functions for models."""
+from torch import nn as nn
 
 import manifolds
 from manifolds.stmath import artanh, tanh
@@ -64,5 +65,69 @@ def mobius_add(manifold, x, y, c, dim=-1):
         res = num / denom.clamp_min(1e-15)
         res = manifold.projx(res)
         return res
-    
 
+
+class FermiDiracDecoder(nn.Module):
+    """Fermi Dirac to compute edge probabilities based on distances."""
+
+    def __init__(self, r, t):
+        super(FermiDiracDecoder, self).__init__()
+        self.r = r
+        self.t = t
+
+    def forward(self, scores):
+        probs = 1. / (torch.exp(((-scores - self.r) / self.t).clamp_max(20)) + 1.0)
+        return probs
+
+
+class MarginLoss(torch.nn.Module):
+    def __init__(self, margin) -> None:
+        super().__init__()
+        self.margin = margin
+
+    def forward(self, preds, data_edge_label=None):
+        pos_scores = preds[data_edge_label==1.0]
+        neg_scores = preds[data_edge_label==0.0]
+        return torch.nn.functional.relu(self.margin - pos_scores[:, None] + neg_scores[None, :]).mean()
+
+
+class StressLoss(nn.Module):
+    """
+    Stress loss for pairwise distances (1D tensors).
+    """
+
+    def __init__(self, eps=1e-8):
+        super().__init__()
+        self.eps = eps
+
+    def forward(self, D_pred: torch.Tensor, D_true: torch.Tensor) -> torch.Tensor:
+        # D_pred, D_true: shape [num_pairs]
+        weights = 1.0 / (D_true ** 2 + self.eps)
+        loss = (weights * (D_pred - D_true) ** 2).mean()
+        return loss
+
+
+class StressLossNR(nn.Module):
+    """
+    Stress loss for pairwise distances (1D tensors) ignoring the target 0 node.
+    """
+
+    def __init__(self, eps=1e-8):
+        super().__init__()
+        self.eps = eps
+
+    def forward(self, D_pred: torch.Tensor, D_true: torch.Tensor) -> torch.Tensor:
+        # D_pred, D_true: shape [num_pairs]
+        mask = torch.where(D_true > 0)[0]
+        weights = 1.0 / (D_true ** 2 + self.eps)
+        loss = (weights[mask] * (D_pred[mask] - D_true[mask]) ** 2).mean()
+        return loss
+
+
+class BCELoss(torch.nn.Module):
+    def __init__(self, decoder) -> None:
+        super().__init__()
+        self.dc_function = decoder
+        self.loss = torch.nn.BCELoss()
+    def forward(self, preds, data_edge_label=None):
+        return self.loss(self.dc_function(preds), data_edge_label)

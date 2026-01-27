@@ -160,13 +160,13 @@ def best_model_eval(exp, model, data, epoch, config, use_wandb=False):
                     h_np = embedding.detach().cpu().numpy()
                     h_np_list.append(h_np)
                 h_np = np.stack(h_np_list, axis=0)
-                save_dir = "./save_embeddings"
+                save_dir = "./data/saved_embeddings"
                 os.makedirs(save_dir, exist_ok=True)
                 num = np.random.randint(0, 10000)
                 embedding_folder_name = config.get("name", f"default_run{str(num).zfill(3)}")
                 if config["dataset.task"] in ['pairs']:
                     save_path = os.path.join(
-                        save_dir, config['dataset.name'], "embeddings", config["model.name"], f"dim_{config['model.hidden_dim']}",
+                        save_dir, config['dataset.task'], config['dataset.name'], "embeddings", config["model.name"], f"dim_{config['model.hidden_dim']}",
                         f"node_embeddings_{config['dataset.name']}_{config['model.manifold']}_model_{config['model.name']}_seed_{config['training.seeds'][exp]}.npy")
                 else:
                     if config.get("dataset.random_features", None) not in [None, "None"]:
@@ -191,12 +191,12 @@ def best_model_eval(exp, model, data, epoch, config, use_wandb=False):
                 h_np = embedding.detach().cpu().numpy()
                 h_np_list.append(h_np)
             h_np = np.stack(h_np_list, axis=0)
-            save_dir = "./save_embeddings"
+            save_dir = "./data/saved_embeddings"
             os.makedirs(save_dir, exist_ok=True)
             num = np.random.randint(0, 10000)
             embedding_folder_name = config.get("name", f"default_run{str(num).zfill(3)}")
             save_path = os.path.join(
-                save_dir, config['dataset.name'], "embeddings", embedding_folder_name,
+                save_dir, config['dataset.task'], config['dataset.name'], "embeddings", embedding_folder_name,
                 f"node_embeddings_{config['dataset.name']}_{config['model.manifold']}_model_{config['model.name']}_seed_{config['training.seeds'][exp]}.npy")
             if not os.path.exists(save_path):
                 os.makedirs(os.path.dirname(save_path), exist_ok=True)
@@ -365,7 +365,7 @@ def run_single_experiment(data, exp, config, seed, device='cpu', use_wandb=False
         best_model = model.__class__(args_model).to(device)
         best_model.load_state_dict(best_model_state)
 
-    for epoch in tqdm(range(config['training.epochs'])):
+    for epoch in tqdm(range(config['training.epochs']), desc=f"Exp {exp+1}"):
         metrics = train_and_evaluate(exp, model, data, optimizer, epoch, config, use_wandb)
         improvement, best_metric = model.has_improved(best_metric, metrics['val'])
         if improvement:
@@ -459,10 +459,10 @@ def run_experiments(config=None, use_wandb=True):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Run GCN training or sweep.")
-    parser.add_argument('--dataset', type=str, default='cora', help='Dataset name')
+    parser = argparse.ArgumentParser(description="Run GNN/HGNN/MLP training or sweep.")
+    parser.add_argument('--dataset', type=str, default='disease_nc', help='Dataset name')
     parser.add_argument('--task', type=str, default='nc', help='Task type (e.g., nc (node classification), lp (link prediction)), pairs (node pairs regression)), nr (node regression))')
-    parser.add_argument('--model', type=str, default='gcn', help='Model type (e.g., gcn, hgcn)')
+    parser.add_argument('--model', type=str, default='hybonet-lorentz', help='Model type (e.g., mlp, gcn, gat, hybonet-lorentz, hgcn')
     parser.add_argument('--sweep', action='store_true', default=False, help='True for running a sweep config, False for normal config')
     parser.add_argument('--cuda', type=int, default=-1, help='CUDA device index (-1 for CPU)')
     parser.add_argument('--save_embeddings', action='store_true', default=False, help='Save node embeddings after training')
