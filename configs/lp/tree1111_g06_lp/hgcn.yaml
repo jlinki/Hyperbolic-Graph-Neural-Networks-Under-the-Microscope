@@ -1,0 +1,40 @@
+project: Hyperbolic GNNs  # W&B project name
+
+parameters:
+  dataset.name: tree1111_g06_lp      # Name of the dataset (e.g., 'cora', 'citeseer', 'pubmed')
+  dataset.task: lp                   # Task type: 'nc' for node classification, 'lp' for link prediction, etc.
+  dataset.split: geom-gcn            # Split strategy (e.g., 'geom-gcn', 'random', 'fixed')
+  dataset.num_val: 0.05              # Ratio of the validation data if there are no predefined splits
+  dataset.num_test: 0.1              # Ratio of the test data if there are no predefined splits
+  dataset.normalize_feats: False     # Whether to row-normalize node features
+  dataset.normalize_adj: True        # Whether to row-normalize adjacency matrix
+  dataset.add_self_loops: True       # Whether to add self-loops to the adjacency matrix
+
+  training.lr: 0.001                  # Learning rate for the optimizer
+  training.weight_decay: 0.005         # Weight decay (L2 regularization coefficient)
+  training.epochs: 5000              # Maximum number of training epochs
+  training.patience: 200             # Early stopping patience (stop if no improvement after this many epochs)
+  training.min_epochs: 100           # Minimum number of epochs to run before early stopping can kick in
+  training.seeds: [42, 123, 99, 18, 456, 10, 1, 44, 666, 11]  # List of random seeds for reproducibility across runs
+  training.optimizer: adam           # Optimizer to use (e.g., 'adam', 'sgd')
+  training.momentum: 0.999           # Momentum for the optimizer (if applicable)
+  training.scheduler: StepLR         # Learning rate scheduler (e.g., 'step', 'cosine', or leave empty for none)
+  training.scheduler_gamma: 0.5      # Gamma for step scheduler, if used
+  training.lr_reduce_freq : None     # Frequency of learning rate reduction, if applicable
+  training.grad_clip: None           # Max norm for gradient clipping, or None for no gradient clipping
+  training.loss: margin              # Loss function to use
+
+  model.name: HGCN                      # Model type (e.g., 'gcn', 'hgcn', 'gat')
+  model.hidden_dim: 64                  # Number of hidden units in each layer
+  model.dropout: 0.0                    # Dropout rate (0.0 means no dropout)
+  model.manifold: PoincareBall          # Type of manifold (e.g., 'PoincareBall', 'Lorentz', or leave empty if Euclidean)
+  model.c: 1.0                          # Curvature constant for hyperbolic models
+  model.r: None                         # Radius for Fermi-Dirac decoder (used in link prediction)
+  model.t: None                         # Temperature for Fermi-Dirac decoder (used in link prediction)
+  model.pretrained_embeddings: null     # Path to pretrained node embeddings, if any
+  model.pos_weight: false               # Use positive class weighting in loss (for class imbalance)
+  model.num_layers: 1                   # Number of layers
+  model.bias: True                      # Whether to include bias terms in layers
+  model.act: tanh                       # Activation function (e.g., 'relu', 'tanh')
+  model.local_agg: True                 # Whether to use local aggregation
+  model.use_att: True                   # Whether to use attention mechanism

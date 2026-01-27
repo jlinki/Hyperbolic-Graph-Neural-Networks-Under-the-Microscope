@@ -1,0 +1,40 @@
+project: Hyperbolic GNNs  # W&B project name
+
+parameters:
+  dataset.name: pdp_tree             # Name of the dataset
+  dataset.task: pairs                # Task type
+  dataset.split: geom-gcn            # Split strategy
+  dataset.normalize_feats: False     # Whether to row-normalize node features
+  dataset.normalize_adj: False       # Whether to row-normalize adjacency matrix
+
+  training.lr: 0.01                  # Learning rate for the optimizer
+  training.weight_decay: 0.001       # Weight decay (L2 regularization coefficient)
+  training.epochs: 5000              # Maximum number of training epochs
+  training.patience: 500             # Early stopping patience (stop if no improvement after this many epochs)
+  training.min_epochs: 100           # Minimum number of epochs to run before early stopping can kick in
+  training.seeds: [42, 123, 99, 18, 456, 10, 1, 44, 666, 11]  # List of random seeds for reproducibility across runs
+  training.optimizer: adam           # Optimizer to use (e.g., 'adam', 'sgd')
+  training.momentum: 0.999           # Momentum for the optimizer (if applicable)
+  training.scheduler: StepLR         # Learning rate scheduler (e.g., 'step', 'cosine', or leave empty for none)
+  training.scheduler_gamma: 0.5      # Gamma for step scheduler, if used
+  training.lr_reduce_freq : None     # Frequency of learning rate reduction, if applicable
+  training.grad_clip: None           # Max norm for gradient clipping, or None for no gradient clipping
+  training.margin: 30.0              # Margin of MarginLoss
+  training.exp_map_clip: None         # Clip value for exponential map to avoid overflow (only for hyperbolic models)
+  #training.loss: bce_fd              # Loss function to use
+
+  model.name: HGCN                      # Model type (e.g., 'gcn', 'hgcn', 'gat')
+  model.hidden_dim: 8                   # Number of hidden units in each layer
+  model.dropout: 0.0                    # Dropout rate (0.0 means no dropout)
+  model.manifold: PoincareBall          # Type of manifold (e.g., 'PoincareBall', 'Lorentz', or leave empty if Euclidean)
+  model.c: 1.0                          # Curvature constant for hyperbolic models
+  model.r: 2.                           # Radius for Fermi-Dirac decoder (used in link prediction)
+  model.t: 1.                           # Temperature for Fermi-Dirac decoder (used in link prediction)
+  model.pretrained_embeddings: null     # Path to pretrained node embeddings, if any
+  model.pos_weight: false               # Use positive class weighting in loss (for class imbalance)
+  model.num_layers: 5                   # Number of layers
+  model.bias: True                      # Whether to include bias terms in layers
+  model.act: relu                       # Activation function (e.g., 'relu', 'tanh')
+  model.local_agg: True                 # Whether to use local aggregation
+  model.use_att: False                  # Whether to use attention mechanism
+  model.double_precision: false         # Use float64 instead of float32 (for numerical stability)

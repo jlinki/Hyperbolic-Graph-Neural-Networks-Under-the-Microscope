@@ -1,0 +1,84 @@
+project: Hyperbolic GNNs  # W&B project name
+method: grid
+name: Airport noise level MLP Sweep
+
+parameters:
+  dataset.name:
+    values:
+      - airport
+  dataset.task:
+    value: lp
+  dataset.split:
+    value: geom-gcn
+  dataset.num_val:
+    value: 0.05
+  dataset.num_test:
+    value: 0.1
+  dataset.normalize_feats:
+    value: False
+  dataset.normalize_adj:
+    values: [False]
+  dataset.random_features:
+    values: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+
+  training.lr:
+    values: [0.01]
+  training.weight_decay:
+    values: [0.0001]
+  training.epochs:
+    value: 5000
+  training.patience:
+    value: 100
+  training.min_epochs:
+    value: 100
+  training.seeds:
+    value: [42, 123, 99, 18, 456, 10, 1, 44, 666, 11]
+  training.optimizer:
+    value: adam
+  training.momentum:
+    value: 0.999
+  training.scheduler:
+    value: StepLR
+  training.scheduler_gamma:
+    value: 0.5
+  training.lr_reduce_freq:
+    value: None
+  training.grad_clip:
+    value: 1.0
+  training.save_embeddings:
+    value: False
+  training.save_embeddings_layers:
+    value: True
+  training.loss:
+    value: margin
+
+  model.name:
+    value: MLP
+  model.hidden_dim:
+    values: [128]
+  model.dropout:
+    values: [0.2]
+  model.manifold:
+    value: Euclidean
+  model.c:
+    value: 1.0
+  model.r:
+    value: None
+  model.t:
+    value: None
+  model.pretrained_embeddings:
+    value: null
+  model.pos_weight:
+    value: false
+  model.num_layers:
+    values: [3]
+  model.bias:
+    value: true
+  model.act:
+    values: [relu]
+  model.n_heads:
+    value: [1]
+  model.use_att:
+    values: [False]
+  model.double_precision:
+    value: false

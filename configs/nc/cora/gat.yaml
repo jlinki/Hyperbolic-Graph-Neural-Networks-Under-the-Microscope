@@ -1,0 +1,36 @@
+project: Hyperbolic GNNs
+
+parameters:
+  dataset.name: cora                 # Name of the dataset (e.g., 'cora', 'citeseer', 'pubmed')
+  dataset.task: nc                   # Task type: 'nc' for node classification, 'lp' for link prediction, etc.
+  dataset.split: test_rest            # Split strategy (e.g., 'geom-gcn', 'random', 'fixed')
+  dataset.num_val: 500
+  dataset.normalize_adj: True        # Whether to symmetrically normalize the adjacency matrix
+  dataset.normalize_feats: False     # Whether to row-normalize node features
+
+  training.lr: 0.01                  # Learning rate for the optimizer
+  training.weight_decay: 0.01      # Weight decay (L2 regularization coefficient)
+  training.epochs: 5000              # Maximum number of training epochs
+  training.patience: 500             # Early stopping patience (stop if no improvement after this many epochs)
+  training.min_epochs: 100           # Minimum number of epochs to run before early stopping can kick in
+  training.seeds: [42, 123, 99, 18, 456, 10, 1, 44, 666, 11]  # List of random seeds for reproducibility across runs
+  training.batch_size:               # Batch size (leave empty for full-batch GNN training)
+  training.optimizer: adam           # Optimizer to use (e.g., 'adam', 'sgd')
+  training.momentum: 0.999           # Momentum for the optimizer (if applicable)
+  training.scheduler_gamma: None     # Gamma for step scheduler, if used
+  training.scheduler:                # Learning rate scheduler (e.g., 'step', 'cosine', or leave empty for none)
+  training.grad_clip: None            # Max norm for gradient clipping, or None for no gradient clipping
+  training.loss: ce
+
+
+  model.name: GAT                   # Model type (e.g., 'gcn', 'hgcn', 'gat')
+  model.hidden_dim: 16              # Number of hidden units in each layer
+  model.dropout: 0.6                # Dropout rate (0.0 means no dropout)
+  model.manifold: Euclidean         # Type of manifold (e.g., 'PoincareBall', 'Lorentz', or None if Euclidean)
+  model.c: None                     # Curvature constant for hyperbolic models
+  model.bias: None                  # Whether to include bias terms in layers
+  model.act: None                   # Activation function (e.g., 'relu', 'tanh')
+  model.num_layers: 3               # Number of layers
+  model.num_heads: 2                  # Number of attention heads
+  model.use_att: true               # Whether to use attention mechanism
+  model.concat: true                  # Whether to concatenate multi-head outputs (True) or average them (False)
