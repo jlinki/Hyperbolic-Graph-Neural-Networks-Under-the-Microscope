@@ -10,3 +10,6 @@ data/Citeseer
 data/citeseer
 data/Pubmed
 data/pubmed
+
+#__pycache__/
+#*.pyc
