@@ -50,11 +50,7 @@ python train.py --dataset disease_lp --model hybonet-lorentz --task lp --sweep
 ```
 ### Hyperparameters
 If you want to see a specific hyperparameter across all models and datasets, e.g. hidden dimension,
-(instead of checking all configs) you can run 
-
-``` 
-python print_hyperparam_table.py --task lp --param model.hidden_dim 
-```
+(instead of checking all configs) you can use the notebook `notebooks/hyperparameter_table.ipynb`.
 
 
 ### New datasets
