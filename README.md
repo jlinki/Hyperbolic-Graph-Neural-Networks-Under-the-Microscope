@@ -8,7 +8,10 @@ and its extensions
 - the ACL 2022 paper **Fully Hyperbolic Neural Networks** [[Paper](https://arxiv.org/abs/2105.14686)] [[Code](https://github.com/chenweize1998/fully-hyperbolic-nn)]
 - the TMLR 2025 paper **Shedding Light on Problems with Hyperbolic Graph Learning** [[Paper](https://arxiv.org/abs/2411.06688)] [[Code](https://github.com/isaykatsman/Shedding-Light-Hyperbolic-Graph-Learning)].
 
-But many things have been unified and reimplemented to fit into the more modern [PyG](https://github.com/pyg-team/pytorch_geometric) and [geoopt](https://github.com/geoopt/geoopt) frameworks.
+We unified and reimplemented many parts to fit into the more modern [PyG](https://github.com/pyg-team/pytorch_geometric) and [Geoopt](https://github.com/geoopt/geoopt) frameworks.
+For the `manifolds`, we use the modules of the Geoopt library and extend it to support all manifold operations required by our models. 
+This unified manifold interface allows all implementations from [Chami et al. (2019)](https://openreview.net/forum?id=BJlSF4SgUB) and [Chen et al. (2022)](https://github.com/chenweize1998/fully-hyperbolic-nn) 
+to be expressed using the same underlying manifold directory, without model-specific geometric code.
 
 # Requirements
 Tested with Python 3.12.3 and PyTorch 2.5.1 (Cuda 12.4).
